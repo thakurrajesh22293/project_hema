@@ -3,30 +3,35 @@ name: Release Automation
 on:
   push:
     tags:
-      - "v*"
+      - "v*" # Trigger on versioned tags (e.g., v1.0.0)
 
 jobs:
   release:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the code
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      # Set up Node.js environment
       - name: Set Up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16" # Use your project’s Node.js version
+          node-version: "16" # Use your project's Node.js version
 
+      # Install project dependencies
       - name: Install Dependencies
         run: npm install
 
-
+      # Generate Changelog
       - name: Generate Changelog
-        uses: rlespinasse/changelog-generator-action@v2
+        uses: ardalanamini/changelog-file-generator@v2
         with:
-          tag: ${{ github.ref_name }}
+          output: CHANGELOG.md # Specify the output file for the changelog
+          sort: DESC            # Optional: Sort commits in descending order
 
+      # Create GitHub Release
       - name: Create Release
         uses: actions/create-release@v1
         env:
@@ -38,6 +43,11 @@ jobs:
           draft: false
           prerelease: false
 
+      # Zip the build folder
+      - name: Zip the Build Folder
+        run: zip -r build.zip ./build
+
+      # Upload Release Assets
       - name: Upload Release Assets
         uses: actions/upload-release-asset@v1
         with:
