@@ -15,7 +15,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'  # Ensure using the latest Node.js 16 version
+          node-version: '18.20.5'  # Using Node.js version 18.20.5 as per your local setup
 
       - name: Cache Node.js modules
         uses: actions/cache@v3
@@ -26,7 +26,7 @@ jobs:
             ${{ runner.os }}-node-modules-
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps  # Using --legacy-peer-deps to resolve dependency conflicts
 
       - name: Generate documentation
         run: npm run generate-docs
