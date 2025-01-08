@@ -7,7 +7,7 @@ The React dfddf Converter is a web application that allows users to convert amou
 ## Features
 - Select the currency to convert from a drop-down menu.
 - Choose the currency to convert to from another drop-down list.
-- Enter the amount and view the converted value instantly.
+- Enter the amount and view the converteddfdafdfda value instantly.
 - Fetch live exchange rates from the API for accurate conversions.
 - Responsive and visually appealing design using Bootstrap.
 - Integration of currency flags in the dropdown menus.

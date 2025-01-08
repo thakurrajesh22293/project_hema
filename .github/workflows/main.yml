@@ -1,59 +1,59 @@
-name: Create Release on Tag
+name: Release Automation
 
 on:
   push:
+    # Trigger on versioned tags (e.g., v1.0.0, v20.15.10)
     tags:
-      - 'v[0-9]+.*'  # Trigger workflow on tags like v1.0, v2.3, etc.
+      - 'v[0-9]+.*'
 
 jobs:
-  test-and-release:
+  build:
+    name: Create Release
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Check out the repository
-    - name: Checkout code
-      uses: actions/checkout@v3
+      # Step 1: Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    # Step 2: Set up your programming language environment (Python example below)
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'  # Adjust for your language version
+      # Step 2: Set up Node.js environment
+      - name: Set Up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.20.5"  # Use your project's Node.js version
 
-    # Step 3: Install dependencies
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt  # Adjust based on your language
+      # Step 3: Install project dependencies
+      - name: Install Dependencies
+        run: npm install
 
-    # Step 4: Run unit tests
-    - name: Run tests
-      run: |
-        pytest  # Adjust based on your test framework
+      # Step 4: Build the project
+      - name: Build Project
+        run: npm run build  # Ensure you have a build script in package.json
 
-    # Step 5: Generate changelog
-    - name: Generate changelog
-      id: changelog
-      uses: TriPSs/conventional-changelog-action@v3
-      with:
-        version: ${{ github.ref_name }}  # Use the tag as the version
+      # Step 5: Create a GitHub release
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.githubtoken }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: "Release ${{ github.ref_name }}"
+          body: |
+            Changes in this Release:
+            - Add change details here.
+          draft: false
+          prerelease: false
 
-    # Step 6: Create GitHub release
-    - name: Create GitHub Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref_name }}
-        release_name: Release ${{ github.ref_name }}
-        body: ${{ steps.changelog.outputs.changelog }}
-        draft: false
-        prerelease: false
+      # Step 6: Zip the build folder
+      - name: Zip the Build Folder
+        run: zip -r build.zip ./build
 
-    # Step 7: Upload release artifacts
-    - name: Upload release assets
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: path/to/artifact.zip  # Adjust with your artifact file path
-        asset_name: artifact.zip
-        asset_content_type: application/zip
+      # Step 7: Upload Release Assets
+      - name: Upload Release Assets
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build.zip
+          asset_name: build.zip
+          asset_content_type: application/zip
