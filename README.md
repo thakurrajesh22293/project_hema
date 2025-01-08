@@ -18,7 +18,7 @@ dfafd
 - Learn or enhance skills in React and TypeScript.
 - Understand how to work with APIs and handle real-time data.
 - Gain experience in building responsive and interactive applications.
-- Showcase your skills in front-end development and API integration.
+- Showcase your skills in front-end deghhvelopment and API integration.
 
 ---
 
