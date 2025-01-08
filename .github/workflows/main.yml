@@ -1,0 +1,59 @@
+name: Create Release on Tag
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.*'  # Trigger workflow on tags like v1.0, v2.3, etc.
+
+jobs:
+  test-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Check out the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up your programming language environment (Python example below)
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'  # Adjust for your language version
+
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt  # Adjust based on your language
+
+    # Step 4: Run unit tests
+    - name: Run tests
+      run: |
+        pytest  # Adjust based on your test framework
+
+    # Step 5: Generate changelog
+    - name: Generate changelog
+      id: changelog
+      uses: TriPSs/conventional-changelog-action@v3
+      with:
+        version: ${{ github.ref_name }}  # Use the tag as the version
+
+    # Step 6: Create GitHub release
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ github.ref_name }}
+        body: ${{ steps.changelog.outputs.changelog }}
+        draft: false
+        prerelease: false
+
+    # Step 7: Upload release artifacts
+    - name: Upload release assets
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.release.outputs.upload_url }}
+        asset_path: path/to/artifact.zip  # Adjust with your artifact file path
+        asset_name: artifact.zip
+        asset_content_type: application/zip
