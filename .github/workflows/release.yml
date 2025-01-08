@@ -2,17 +2,19 @@ name: Release Automation
 
 on:
   push:
+    # Trigger on versioned tags (e.g., v1.0.0, v20.15.10)
     tags:
-      - "v*" # Trigger on versioned tags (e.g., v1.0.0)
+      - "v*"
 
 jobs:
-  release:
+  build:
+    name: Create Release
     runs-on: ubuntu-latest
 
     steps:
       # Checkout the code
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Set up Node.js environment
       - name: Set Up Node.js
@@ -24,22 +26,19 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      # Generate Changelog
-      - name: Draft Release Notes
-      - uses: release-drafter/release-drafter@v5
-        with:
-          output: CHANGELOG.md # Specify the output file for the changelog
-          sort: DESC            # Optional: Sort commits in descending order
-
-      # Create GitHub Release
+      # Create Release
       - name: Create Release
-        uses: actions/create-release@v1
+        id: create_release
+        uses: comnoco/create-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: "Release ${{ github.ref_name }}"
-          body_path: CHANGELOG.md
+          tag_name: ${{ github.ref }}
+          release_name: "Release ${{ github.ref }}"
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
           draft: false
           prerelease: false
 
