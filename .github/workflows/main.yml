@@ -22,9 +22,12 @@ jobs:
         with:
           node-version: "18.x"  # Ensure compatibility with your project
 
-      # Step 3: Install project dependencies
+      # Step 3: Install project dependencies with retry logic
       - name: Install Dependencies
-        run: npm install --legacy-peer-deps
+        run: |
+          echo "Installing dependencies..."
+          npm install --legacy-peer-deps || npm install --legacy-peer-deps
+        continue-on-error: false
 
       # Step 4: Verify Dependencies Installation
       - name: Verify Node Modules
@@ -33,11 +36,14 @@ jobs:
             echo "node_modules directory not found!"
             exit 1
           fi
+          echo "Node modules installed successfully:"
           ls -lh node_modules
 
       # Step 5: Build the project
       - name: Build Project
-        run: npm run build  # Ensure you have a build script in package.json
+        run: |
+          echo "Building the project..."
+          npm run build
 
       # Step 6: Verify Build Output
       - name: Verify Build Folder
@@ -46,6 +52,7 @@ jobs:
             echo "Build folder not found!"
             exit 1
           fi
+          echo "Build folder contents:"
           ls -lh ./build
 
       # Step 7: Create a GitHub release
@@ -65,7 +72,9 @@ jobs:
 
       # Step 8: Zip the build folder
       - name: Zip the Build Folder
-        run: zip -r build.zip ./build
+        run: |
+          echo "Creating build.zip..."
+          zip -r build.zip ./build
 
       # Step 9: Verify the Zip File
       - name: Verify Build.zip
@@ -74,10 +83,11 @@ jobs:
             echo "build.zip not created!"
             exit 1
           fi
+          echo "Build zip created successfully:"
           ls -lh build.zip
 
-      # Step 10: Cleanup
-      - name: Cleanup Temporary Files
+      # Step 10: Upload Release Assets
+       name: Cleanup Temporary Files
         run: |
           echo "Cleaning up temporary files..."
           rm -rf build.zip ./build
