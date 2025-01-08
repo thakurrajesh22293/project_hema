@@ -76,18 +76,7 @@ jobs:
           fi
           ls -lh build.zip
 
-      # Step 10: Upload Release Assets
-      - name: Upload Release Assets
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build.zip
-          asset_name: build.zip
-          asset_content_type: application/zip
-
-      # Step 11: Cleanup
+      # Step 10: Cleanup
       - name: Cleanup Temporary Files
         run: |
           echo "Cleaning up temporary files..."
