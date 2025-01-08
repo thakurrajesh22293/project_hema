@@ -1,6 +1,6 @@
 # React Currency Converter
 
-The React dfddf Converter is a web application that allows users to convert amounts between currencies in real-time. It usesdfadfa the [ExchangeRate API] to fdfafadetch exchange rate data for over 150+ currencies, providing a seamless and user-friendly experience. Built with modern technologies like React and TypeScript, this app is an excellent tool for learning, practicing, or showcasing your front-end development skills.
+The React dfddf Converter is a web application that allows users to convert amounts between currencies in real-time. It usesdfadfa the [ExchangeRate API] to fdfafadetch exchange rate data for over 150+ currencies, providing a seamless and user-friendly experience. Built with modern tegdsgsggies like React and TypeScript, this app is an excellent tool for learning, practicing, or showcasing your front-end development skills.
 dfafd
 ---
 
