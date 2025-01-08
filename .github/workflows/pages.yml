@@ -29,7 +29,7 @@ jobs:
         run: npm install --legacy-peer-deps  # Using --legacy-peer-deps to resolve dependency conflicts
 
       - name: Generate documentation
-        run: npm run generate-docs
+        run: npx typedoc --entryPoints src/index.tsx --out docs  # Using npx to ensure typedoc runs
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
