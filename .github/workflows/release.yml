@@ -25,8 +25,8 @@ jobs:
         run: npm install
 
       # Generate Changelog
-      - name: Generate Changelog
-        uses: ardalanamini/changelog-file-generator@v2
+      - name: Draft Release Notes
+      - uses: release-drafter/release-drafter@v5
         with:
           output: CHANGELOG.md # Specify the output file for the changelog
           sort: DESC            # Optional: Sort commits in descending order
