@@ -53,7 +53,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure this secret exists in your repository
+          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}  # Ensure this secret exists in your repository
         with:
           tag_name: ${{ github.ref_name }}
           release_name: "Release ${{ github.ref_name }}"
@@ -76,7 +76,7 @@ jobs:
           fi
           ls -lh build.zip
 
-      # Step 10: Upload Release Assets
-        run: |
-          echo "Cleaning up temporary files..."
-          rm -rf build.zip ./build
+      
+      # Step 10 
+      - name: Cleanup Temporary Files
+        run: rm -rf build.zip ./build
