@@ -24,11 +24,7 @@ jobs:
 
       # Step 3: Install project dependencies
       - name: Install Dependencies
-        run: npm install
-
-      # Step 4: Run tests
-      #- name: Run Tests
-       # run: npm test
+        run: npm install --legacy-peer-deps
 
       # Step 5: Build the project
       - name: Build Project
@@ -39,9 +35,9 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.githubtoken }}
+          GITHUB_TOKEN: ${{ secrets.githubtoken }}  # Use GitHub's default token
         with:
-          tag_name: ${{ github.ref }}
+          tag_name: ${{ github.ref_name }}
           release_name: "Release ${{ github.ref_name }}"
           body: |
             Changes in this Release:
